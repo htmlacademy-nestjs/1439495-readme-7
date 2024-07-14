@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Анна Миронова](https://up.htmlacademy.ru/nodejs-2/7/user/1439495).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Наумов](https://htmlacademy.ru/profile/naumov_evg).
 
 ---
 

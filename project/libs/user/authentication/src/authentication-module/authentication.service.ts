@@ -1,4 +1,4 @@
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BlogUserEntity, BlogUserRepository } from '@project/blog-user';
 import { CreateUserDto } from '../dto/create-user.dto';

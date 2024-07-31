@@ -6,6 +6,7 @@ import { LoginUserDto } from '../dto/login-user.dto';
 import { AuthenticationResponseMessage } from './authentication.constant';
 import { LoggedUserRdo } from '../rdo/logged-user.rdo';
 import { UserRdo } from '../rdo/user.rdo';
+import { fillDto } from '@project/shared-helpers';
 
 @ApiTags('authentication')
 @Controller('user')
@@ -25,7 +26,7 @@ export class AuthenticationController {
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
     const user = await this.authService.register(dto);
-    return user.toPOJO();
+    return fillDto(UserRdo, {...user.toPOJO()});
   }
 
   @ApiResponse({
@@ -55,6 +56,6 @@ export class AuthenticationController {
   @Get('info/:id')
   public async show(@Param('id') id: string) {
     const user = await this.authService.getUser(id);
-    return user.toPOJO();
+    return fillDto(UserRdo, {...user.toPOJO(), id});
   }
 }

@@ -22,13 +22,13 @@ export class CreatePostDto {
 
   @ApiProperty({
     description: 'Date of publication',
-    example: '2024-08-06'
+    example: '2024-08-11T10:46:24.434Z'
   })
   public publishDate: Date
 
   @ApiProperty({
     description: 'Tags for publication',
-    example: 'tag'
+    example: '[]'
   })
   public tags?: string[];
 }

@@ -17,6 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@project/authentication": ["libs/user/authentication/src/index.ts"],
+      "@project/blog-comment": ["libs/blog/blog-comment/src/index.ts"],
       "@project/blog-models": ["libs/blog/models/src/index.ts"],
       "@project/blog-post": ["libs/blog/blog-post/src/index.ts"],
       "@project/blog-user": ["libs/user/blog-user/src/index.ts"],

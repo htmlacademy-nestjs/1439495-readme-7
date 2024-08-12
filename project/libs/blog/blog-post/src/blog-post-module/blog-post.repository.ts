@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaClientService } from '@project/blog-models';
-import { Post, TextPost, VideoPost, PhotoPost, LinkPost, QuotePost } from '@project/shared-core';
+import { PaginationResult, Post, TextPost, VideoPost, PhotoPost, LinkPost, QuotePost } from '@project/shared-core';
 import { BasePostgresRepository } from '@project/data-access';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
+import { BlogPostQuery } from './blog-post.query';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -14,20 +16,45 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     super(entityFactory, client);
   }
 
-  public async findAll(): Promise<BlogPostEntity[]> {
-    // TODO: Добавить сортировку и лимит по ТЗ
-    const documents = await this.client.post.findMany({
-      include: {
-        comments: true,
-        link: true,
-        text: true,
-        video: true,
-        photo: true,
-        quote: true
-      }
-    });
-    console.log(documents);
-    return documents.map((document) => this.createEntityFromDocument(document));
+  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+    return this.client.post.count({ where });
+  }
+
+  private calculatePostsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
+  }
+
+  public async findAll(query?: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
+    const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+    const take = query?.limit;
+    const where: Prisma.PostWhereInput = {};
+    const orderBy: Prisma.PostOrderByWithRelationInput = {};
+
+    if (query?.sortDirection) {
+      orderBy.createdAt = query.sortDirection;
+    }
+
+    const [records, postCount] = await Promise.all([
+      this.client.post.findMany({ where, orderBy, skip, take,
+        include: {
+          comments: true,
+          link: true,
+          text: true,
+          video: true,
+          photo: true,
+          quote: true
+        },
+      }),
+      this.getPostCount(where),
+    ]);
+
+    return {
+      entities: records.map((record) => this.createEntityFromDocument(record)),
+      currentPage: query?.page,
+      totalPages: this.calculatePostsPage(postCount, take),
+      itemsPerPage: take,
+      totalItems: postCount
+    }
   }
 
   public async save(entity: BlogPostEntity): Promise<void> {
@@ -78,6 +105,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       where: {
         id,
       },
+      include: {
+        comments: true,
+        link: true,
+        text: true,
+        video: true,
+        photo: true,
+        quote: true
+      }
     });
 
     if (! document) {
@@ -96,10 +131,19 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async update(entity: BlogPostEntity): Promise<void> {
+    const pojoEntity = entity.toPOJO();
     await this.client.post.update({
       where: { id: entity.id },
       data: {
-        ...entity,
+        ...pojoEntity,
+      },
+      include: {
+        comments: true,
+        link: true,
+        text: true,
+        video: true,
+        photo: true,
+        quote: true
       }
     });
   }

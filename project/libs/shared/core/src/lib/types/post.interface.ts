@@ -9,29 +9,35 @@ export interface Post {
   updatedAt?: Date;
   publishDate: Date
   tags?: string[];
+  content?: TextPost | VideoPost | PhotoPost | LinkPost | QuotePost;
 }
 
-export interface VideoPost extends Post {
+export interface VideoPost {
+  postId: string;
   title: string;
   link: string;
 }
 
-export interface TextPost extends Post {
+export interface TextPost {
+  postId: string;
   title: string;
   preview: string;
   text: string;
 }
 
-export interface QuotePost extends Post {
+export interface QuotePost {
+  postId: string;
   text: string;
   author: string;
 }
 
-export interface PhotoPost extends Post {
+export interface PhotoPost {
+  postId: string;
   photo: string;
 }
 
-export interface LinkPost extends Post {
+export interface LinkPost {
+  postId: string;
   description?: string;
   link: string;
 }

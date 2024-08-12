@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PostType } from '@project/shared-core';
+import { TextPostDto } from './content-dto/text-post.dto';
+import { VideoPostDto } from './content-dto/video-post.dto';
+import { LinkPostDto } from './content-dto/link-post.dto';
+import { QuotePostDto } from './content-dto/quote-post.dto';
+import { PhotoPostDto } from './content-dto/photo-post.dto';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -31,4 +36,6 @@ export class CreatePostDto {
     example: '[]'
   })
   public tags?: string[];
+
+  public content: TextPostDto | VideoPostDto | LinkPostDto | QuotePostDto | PhotoPostDto;
 }

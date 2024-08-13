@@ -37,7 +37,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const [records, postCount] = await Promise.all([
       this.client.post.findMany({ where, orderBy, skip, take,
         include: {
-          comments: true,
+          _count: {
+            select: { comments: true, likes: true }
+          },
           link: true,
           text: true,
           video: true,
@@ -49,7 +51,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     ]);
 
     return {
-      entities: records.map((record) => this.createEntityFromDocument(record)),
+      entities: records.map((record) => this.createEntityFromDocument({
+        ...record,
+        commentsCount: record._count.comments,
+        likesCount: record._count.likes,
+        content: record.link || record.text || record.video || record.photo || record.quote
+      })),
       currentPage: query?.page,
       totalPages: this.calculatePostsPage(postCount, take),
       itemsPerPage: take,
@@ -106,7 +113,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         id,
       },
       include: {
-        comments: true,
+        _count: {
+          select: { comments: true, likes: true }
+        },
         link: true,
         text: true,
         video: true,
@@ -119,7 +128,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       throw new NotFoundException(`Post with id ${id} not found.`);
     }
 
-    return this.createEntityFromDocument(document);
+    return this.createEntityFromDocument({
+      ...document,
+      commentsCount: document._count.comments,
+      likesCount: document._count.likes,
+      content: document.link || document.text || document.video || document.photo || document.quote
+    });
   }
 
   public async deleteById(id: string): Promise<void> {

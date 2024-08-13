@@ -10,6 +10,8 @@ export interface Post {
   publishDate: Date
   tags?: string[];
   content?: TextPost | VideoPost | PhotoPost | LinkPost | QuotePost;
+  commentsCount?: number;
+  likesCount?: number;
 }
 
 export interface VideoPost {

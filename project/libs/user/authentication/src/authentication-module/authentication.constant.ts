@@ -10,3 +10,12 @@ export const AuthenticationResponseMessage = {
   UserExist: 'User with this email is already exists',
   UserCreated: 'The new user has been successfully created.',
 } as const;
+
+export const AuthenticationValidateMessage = {
+  EmailNotValid: 'The email is not valid',
+  NameNotValid: 'The user name is not valid',
+  NameMinLength: 'The user name must be at least 3 characters',
+  NameMaxLength: 'The user name must be shorter than 50 characters',
+  PasswordMinLength: 'The password must be at least 6 characters',
+  PasswordMaxLength: 'The password must be shorter than 12 characters'
+} as const;

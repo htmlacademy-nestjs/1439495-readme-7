@@ -1,4 +1,4 @@
-import { Entity, Post, StorableEntity, PostType } from '@project/shared-core';
+import { Entity, Post, StorableEntity, PostType, TextPost, VideoPost, PhotoPost, LinkPost, QuotePost } from '@project/shared-core';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public userId: string;
@@ -8,6 +8,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public updatedAt: Date;
   public publishDate: Date
   public tags: string[];
+  public commentsCount: number;
+  public likesCount: number;
+  public content?: TextPost | VideoPost | PhotoPost | LinkPost | QuotePost;
 
   constructor(post?: Post) {
     super();
@@ -27,6 +30,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.updatedAt = post.updatedAt;
     this.publishDate = post.publishDate;
     this.tags = post.tags ?? [];
+    this.content = post.content ?? undefined;
+    this.commentsCount = post.commentsCount ?? 0;
+    this.likesCount = post.likesCount ?? 0;
   }
 
   public toPOJO(): Post {
@@ -38,7 +44,10 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       publishDate: this.publishDate,
-      tags: this.tags
+      tags: this.tags,
+      content: this.content,
+      commentsCount: this.commentsCount,
+      likesCount: this.likesCount
     }
   }
 }

@@ -1,10 +1,12 @@
-import { Controller, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillDto } from '@project/shared-helpers';
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRdo } from './rdo/post.rdo';
+import { BlogPostQuery } from './blog-post.query';
+import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -18,10 +20,13 @@ export class BlogPostController {
     status: HttpStatus.OK
   })
   @Get('/')
-  public async index() {
-    const blogPostEntities = await this.blogPostService.getAllPosts();
-    const posts = blogPostEntities.map((post) => post.toPOJO());
-    return fillDto(PostRdo, posts);
+  public async index(@Query() query: BlogPostQuery) {
+    const postsWithPagination = await this.blogPostService.getAllPosts(query);
+    const result = {
+      ...postsWithPagination,
+      entities: postsWithPagination.entities.map((post) => post.toPOJO()),
+    }
+    return fillDto(PostWithPaginationRdo, result);
   }
 
   @ApiResponse({

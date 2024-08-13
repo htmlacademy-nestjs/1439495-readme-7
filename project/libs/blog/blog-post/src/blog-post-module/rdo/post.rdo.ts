@@ -44,4 +44,13 @@ export class PostRdo {
   })
   @Expose()
   public tags: string[];
+
+  @Expose()
+  public content;
+
+  @Expose()
+  public commentsCount: number;
+
+  @Expose()
+  public likesCount: number;
 }

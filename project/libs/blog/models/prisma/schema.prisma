@@ -22,7 +22,7 @@ model Post {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   publishDate DateTime  @map("publish_date")
-  tags        String[]
+  tags        Tag[]
   comments    Comment[]
   likes       Like[]
   video       Video?
@@ -40,6 +40,14 @@ enum Type {
   Quote
   Photo
   Link
+}
+
+model Tag {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  post     Post[]
+
+  @@map("tags")
 }
 
 model Video {

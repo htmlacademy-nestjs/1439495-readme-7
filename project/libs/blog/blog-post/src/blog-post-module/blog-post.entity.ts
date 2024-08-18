@@ -1,4 +1,4 @@
-import { Entity, Post, StorableEntity, PostType, TextPost, VideoPost, PhotoPost, LinkPost, QuotePost } from '@project/shared-core';
+import { Entity, Post, StorableEntity, PostType, TextPost, VideoPost, PhotoPost, LinkPost, QuotePost, Tag } from '@project/shared-core';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public userId: string;
@@ -7,7 +7,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public createdAt: Date;
   public updatedAt: Date;
   public publishDate: Date
-  public tags: string[];
+  public tags?: Tag[];
   public commentsCount: number;
   public likesCount: number;
   public content?: TextPost | VideoPost | PhotoPost | LinkPost | QuotePost;

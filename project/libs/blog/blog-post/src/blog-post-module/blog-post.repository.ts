@@ -151,7 +151,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     await this.client.post.update({
       where: { id: entity.id },
       data: {
-        ...pojoEntity,
+        isDraft: pojoEntity.isDraft,
+        publishDate: pojoEntity.publishDate,
+        userId: pojoEntity.userId,
+        type: pojoEntity.type,
         tags: {
           connectOrCreate: entity.tags?.map(({ name }) => ({ where: { name }, create: { name } })) ?? []
         }

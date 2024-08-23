@@ -5,7 +5,7 @@ export { EntityFactory } from './lib/interfaces/entity-factory.interface';
 export { Comment } from './lib/types/comment.interface';
 export { Post, VideoPost, TextPost, QuotePost, PhotoPost, LinkPost, PostType, Tag } from './lib/types/post.interface';
 export { Token } from './lib/interfaces/token.interface';
-export { TokenPayload, RefreshTokenPayload } from './lib/interfaces/token-payload.interface';
+export { TokenPayload, RefreshTokenPayload, RequestWithTokenPayload } from './lib/interfaces/token-payload.interface';
 export { SortDirection } from './lib/interfaces/sort-direction.interface';
 export { PaginationResult } from './lib/interfaces/pagination.interface';
 export { File } from './lib/types/file.interface';

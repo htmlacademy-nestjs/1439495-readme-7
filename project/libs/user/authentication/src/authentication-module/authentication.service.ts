@@ -6,7 +6,7 @@ import { BlogUserEntity, BlogUserRepository } from '@project/blog-user';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { LoginUserDto } from '../dto/login-user.dto';
 import { AUTH_USER_INVALID, REGISTER_USER_CONFLICT, USER_NOT_FOUND } from './authentication.constant';
-import { Token, TokenPayload, User } from '@project/shared-core';
+import { Token, User } from '@project/shared-core';
 import { createJWTPayload } from '@project/shared-helpers';
 import { jwtConfig } from '@project/config';
 import { RefreshTokenService } from '../refresh-token-module/refresh-token.service';

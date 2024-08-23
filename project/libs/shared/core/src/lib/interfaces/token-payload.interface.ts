@@ -9,3 +9,7 @@ export interface TokenPayload {
 export interface RefreshTokenPayload extends TokenPayload {
   tokenId: string;
 }
+
+export interface RequestWithTokenPayload {
+  user?: TokenPayload
+}

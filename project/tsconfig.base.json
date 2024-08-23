@@ -23,8 +23,15 @@
       "@project/blog-user": ["libs/user/blog-user/src/index.ts"],
       "@project/config": ["libs/user/config/src/index.ts"],
       "@project/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@project/email-subscriber": [
+        "libs/notify/email-subscriber/src/index.ts"
+      ],
+      "@project/file-uploader": ["libs/file-vault/file-uploader/src/index.ts"],
+      "@project/file-vault-config": ["libs/file-vault/config/src/index.ts"],
+      "@project/notify-config": ["libs/notify/config/src/index.ts"],
       "@project/shared-core": ["libs/shared/core/src/index.ts"],
-      "@project/shared-helpers": ["libs/shared/helpers/src/index.ts"]
+      "@project/shared-helpers": ["libs/shared/helpers/src/index.ts"],
+      "@project/user-notify": ["libs/user/notify/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

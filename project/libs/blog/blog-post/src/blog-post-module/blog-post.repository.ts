@@ -44,7 +44,8 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
           text: true,
           video: true,
           photo: true,
-          quote: true
+          quote: true,
+          tags: true
         },
       }),
       this.getPostCount(where),
@@ -65,43 +66,44 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async save(entity: BlogPostEntity): Promise<void> {
+    const pojoEntity = entity.toPOJO();
     const record = await this.client.post.create({
       data: {
-        isDraft: entity.isDraft,
-        publishDate: entity.publishDate,
-        userId: entity.userId,
-        type: entity.type,
-        tags: entity.tags
+        isDraft: pojoEntity.isDraft,
+        publishDate: pojoEntity.publishDate,
+        userId: pojoEntity.userId,
+        type: pojoEntity.type,
+        tags: {
+          connectOrCreate: entity.tags?.map(({ name }) => ({ where: { name }, create: { name } })) ?? []
+        }
       }
     });
     entity.id = record.id;
 
-    /// Пока сделала так, разбираюсь
-
-    switch(entity.type) {
+    switch(pojoEntity.type) {
       case 'Video':
         await this.client.video.create({
-          data: {...entity.content as VideoPost, postId: record.id}
+          data: {...pojoEntity.content as VideoPost, postId: record.id}
         })
         break;
       case 'Text':
         await this.client.text.create({
-          data: {...entity.content as TextPost, postId: record.id}
+          data: {...pojoEntity.content as TextPost, postId: record.id}
         })
         break;
       case 'Quote':
         await this.client.quote.create({
-          data: {...entity.content as QuotePost, postId: record.id}
+          data: {...pojoEntity.content as QuotePost, postId: record.id}
         })
         break;
       case 'Photo':
         await this.client.photo.create({
-          data: {...entity.content as PhotoPost, postId: record.id}
+          data: {...pojoEntity.content as PhotoPost, postId: record.id}
         })
         break;
       case 'Link':
         await this.client.link.create({
-          data: {...entity.content as LinkPost, postId: record.id}
+          data: {...pojoEntity.content as LinkPost, postId: record.id}
         })
         break;
     }
@@ -149,7 +151,13 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     await this.client.post.update({
       where: { id: entity.id },
       data: {
-        ...pojoEntity,
+        isDraft: pojoEntity.isDraft,
+        publishDate: pojoEntity.publishDate,
+        userId: pojoEntity.userId,
+        type: pojoEntity.type,
+        tags: {
+          connectOrCreate: entity.tags?.map(({ name }) => ({ where: { name }, create: { name } })) ?? []
+        }
       },
       include: {
         comments: true,

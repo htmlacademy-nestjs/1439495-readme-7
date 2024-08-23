@@ -8,7 +8,7 @@ export interface Post {
   createdAt?: Date;
   updatedAt?: Date;
   publishDate: Date
-  tags?: string[];
+  tags?: Tag[];
   content?: TextPost | VideoPost | PhotoPost | LinkPost | QuotePost;
   commentsCount?: number;
   likesCount?: number;
@@ -42,4 +42,9 @@ export interface LinkPost {
   postId: string;
   description?: string;
   link: string;
+}
+
+export interface Tag {
+  id?: string;
+  name: string;
 }

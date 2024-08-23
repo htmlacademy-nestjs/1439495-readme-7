@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsBoolean, IsMongoId, IsString, IsIn, IsDateString, IsOptional, IsObject, ValidateNested } from 'class-validator';
-import { PostType } from '@project/shared-core';
+import { PostType, Tag } from '@project/shared-core';
 import { TextPostDto } from './content-dto/text-post.dto';
 import { VideoPostDto } from './content-dto/video-post.dto';
 import { LinkPostDto } from './content-dto/link-post.dto';
@@ -44,7 +44,7 @@ export class CreatePostDto {
   })
   @IsArray()
   @IsOptional()
-  public tags?: string[];
+  public tags?: Tag[];
 
   @ApiProperty({
     description: 'Content for publication',

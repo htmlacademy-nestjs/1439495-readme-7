@@ -18,11 +18,11 @@ model Post {
   id          String    @id @default(uuid())
   userId      String    @map("user_id")
   type        Type
-  isDraft     Boolean   @map("is_draft")
+  isDraft     Boolean   @map("is_draft")  @default(false)
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
-  publishDate DateTime  @map("publish_date")
-  tags        String[]
+  publishDate DateTime  @map("publish_date") @default(now())
+  tags        Tag[]
   comments    Comment[]
   likes       Like[]
   video       Video?
@@ -42,11 +42,19 @@ enum Type {
   Link
 }
 
+model Tag {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  post     Post[]
+
+  @@map("tags")
+}
+
 model Video {
   postId  String    @map("post_id") @unique
   title   String
   link    String
-  post    Post      @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  post    Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("video_posts")
 }
@@ -56,7 +64,7 @@ model Text {
   title     String
   preview   String
   text      String
-  post    Post      @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  post    Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("text_posts")
 }
@@ -65,7 +73,7 @@ model Quote {
   postId    String    @map("post_id") @unique
   text      String
   author    String
-  post    Post      @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  post    Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("quote_posts")
 }
@@ -73,7 +81,7 @@ model Quote {
 model Photo {
   postId    String    @map("post_id") @unique
   photo     String
-  post    Post      @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  post    Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("photo_posts")
 }
@@ -82,7 +90,7 @@ model Link {
   postId        String    @map("post_id") @unique
   link          String
   description   String?
-  post    Post      @relation(fields: [postId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  post    Post      @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("link_posts")
 }

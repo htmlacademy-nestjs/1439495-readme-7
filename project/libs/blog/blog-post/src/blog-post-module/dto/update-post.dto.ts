@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PostType } from '@project/shared-core';
+import { PostType, Tag } from '@project/shared-core';
 
 export class UpdatePostDto {
   @ApiProperty({
@@ -30,5 +30,5 @@ export class UpdatePostDto {
     description: 'Tags for publication',
     example: 'tag'
   })
-  public tags?: string[];
+  public tags?: Tag[];
 }

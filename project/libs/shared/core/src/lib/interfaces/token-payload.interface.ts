@@ -5,3 +5,7 @@ export interface TokenPayload {
   dateOfRegistry: Date;
   avatar: string;
 }
+
+export interface RefreshTokenPayload extends TokenPayload {
+  tokenId: string;
+}

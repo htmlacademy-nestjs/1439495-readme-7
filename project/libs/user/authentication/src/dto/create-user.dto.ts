@@ -29,7 +29,7 @@ export class CreateUserDto {
   public password: string;
 
   @ApiProperty({
-    description: 'User avatar URL',
+    description: 'User avatar',
     example: '/avatar.jpg'
   })
   @IsOptional()

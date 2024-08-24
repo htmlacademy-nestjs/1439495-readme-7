@@ -95,4 +95,10 @@ export class AuthenticationService {
 
     return existUser;
   }
+
+  public async changeUserPassword(id: string, oldPassword: string, newPassword: string) {
+    const user = await this.getUser(id);
+    await this.verifyUser({ email: user.email, password: oldPassword });
+    await this.blogUserRepository.changePassword(user.email, newPassword);
+  }
 }

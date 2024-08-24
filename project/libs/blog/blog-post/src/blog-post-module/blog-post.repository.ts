@@ -169,5 +169,13 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       }
     });
   }
+
+  public async getPostsCountForAuthor(userId: string): Promise<number> {
+    return this.getPostCount({userId});
+  }
+
+  public async getSubscribersCount(userId: string): Promise<number> {
+    return this.client.subscriber.count({ where: { authorId: userId } });
+  }
 }
 

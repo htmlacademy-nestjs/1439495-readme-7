@@ -23,4 +23,10 @@ export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, Blog
     }
     return entity;
   }
+
+  public async changePassword(email:string, password: string) {
+    const document = await this.model.findOne({email}).exec();
+    const entity = await this.createEntityFromDocument(document);
+    await entity.setPassword(password);
+  }
 }

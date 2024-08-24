@@ -78,4 +78,10 @@ export class BlogPostController {
   public async destroy(@Param('id') id: string) {
     await this.blogPostService.deletePostById(id);
   }
+
+  @Get('/user/:id')
+  public async showCommonInfoForUser(@Param('id') id: string) {
+    const authorInfo = await this.blogPostService.getInfoForAuthor(id);
+    return authorInfo;
+  }
 }

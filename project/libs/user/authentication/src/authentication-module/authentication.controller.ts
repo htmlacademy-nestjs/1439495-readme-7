@@ -1,4 +1,4 @@
-import { Controller, Body, Post, Get, Param, HttpStatus, UseGuards, Req, HttpCode } from '@nestjs/common';
+import { Controller, Body, Post, Patch, Get, Param, HttpStatus, UseGuards, Req, HttpCode } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -12,6 +12,7 @@ import { RequestWithUser } from './request-with-user.interface';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { RequestWithTokenPayload } from '@project/shared-core';
+import { PasswordDto } from '../dto/password.dto';
 
 @ApiTags('authentication')
 @Controller('user')
@@ -62,7 +63,6 @@ export class AuthenticationController {
     status: HttpStatus.NOT_FOUND,
     description: AuthenticationResponseMessage.UserNotFound,
   })
-  @UseGuards(JwtAuthGuard)
   @Get('info/:id')
   public async show(@Param('id') id: string) {
     const user = await this.authService.getUser(id);
@@ -84,5 +84,19 @@ export class AuthenticationController {
   @Post('check')
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return payload;
+  }
+
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: AuthenticationResponseMessage.PasswordChanged,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.LoggedError,
+  })
+  @Patch('password')
+  public async changePassword(@Body() dto: PasswordDto) {
+    const {userId, oldPassword, newPassword} = dto;
+    await this.authService.changeUserPassword(userId, oldPassword, newPassword);
   }
 }

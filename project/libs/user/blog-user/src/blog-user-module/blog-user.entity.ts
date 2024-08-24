@@ -8,6 +8,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<User> {
   public passwordHash: string;
   public name: string;
   public dateOfRegistry: Date;
+  public avatar?: string;
 
   constructor(user?: User) {
     super();
@@ -24,6 +25,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<User> {
     this.name = user.name;
     this.dateOfRegistry = user.dateOfRegistry;
     this.passwordHash = user.passwordHash;
+    this.avatar = user.avatar || '';
   }
 
   public toPOJO(): User {
@@ -32,7 +34,8 @@ export class BlogUserEntity extends Entity implements StorableEntity<User> {
       email: this.email,
       passwordHash: this.passwordHash,
       name: this.name,
-      dateOfRegistry: this.dateOfRegistry
+      dateOfRegistry: this.dateOfRegistry,
+      avatar: this.avatar
     }
   }
 

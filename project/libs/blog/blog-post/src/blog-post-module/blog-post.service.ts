@@ -44,4 +44,10 @@ export class BlogPostService {
     }
     await this.blogPostRepository.deleteById(id);
   }
+
+  public async getInfoForAuthor(id: string) {
+    const postsCount = await this.blogPostRepository.getPostsCountForAuthor(id);
+    const subscribersCount = await this.blogPostRepository.getSubscribersCount(id);
+    return { postsCount, subscribersCount };
+  }
 }

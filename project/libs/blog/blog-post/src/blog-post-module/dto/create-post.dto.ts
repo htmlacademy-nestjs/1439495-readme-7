@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsMongoId, IsString, IsIn, IsDateString, IsOptional, IsObject, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsDateString, IsOptional, IsObject, ValidateNested } from 'class-validator';
 import { PostType, Tag } from '@project/shared-core';
 import { TextPostDto } from './content-dto/text-post.dto';
 import { VideoPostDto } from './content-dto/video-post.dto';
@@ -8,12 +8,7 @@ import { QuotePostDto } from './content-dto/quote-post.dto';
 import { PhotoPostDto } from './content-dto/photo-post.dto';
 
 export class CreatePostDto {
-  @ApiProperty({
-    description: 'Post author user ID',
-    example: '658170cbb954e9f5b905ccf4'
-  })
-  @IsString()
-  @IsMongoId()
+
   public userId: string;
 
   @ApiProperty({
@@ -48,7 +43,7 @@ export class CreatePostDto {
 
   @ApiProperty({
     description: 'Content for publication',
-    example: '{}'
+    example: '{"title": "Пост", "preview": "Краткое описание", "text": "Собственно сам длинный пост"}'
   })
   @IsObject()
   @ValidateNested()

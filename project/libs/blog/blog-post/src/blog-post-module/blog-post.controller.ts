@@ -84,4 +84,16 @@ export class BlogPostController {
     const authorInfo = await this.blogPostService.getInfoForAuthor(id);
     return authorInfo;
   }
+
+  @Post('/:id/like')
+  public async addLike(@Body() {userId}, @Param('id') id: string) {
+    const post = await this.blogPostService.addLike(userId, id);
+    return fillDto(PostRdo, post.toPOJO());
+  }
+
+  @Patch('/:id/like')
+  public async deleteLike(@Body() {userId}, @Param('id') id: string) {
+    const post = await this.blogPostService.deleteLike(userId, id);
+    return fillDto(PostRdo, post.toPOJO());
+  }
 }

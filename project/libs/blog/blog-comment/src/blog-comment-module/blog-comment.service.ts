@@ -13,8 +13,8 @@ export class BlogCommentService {
     return await this.blogCommentRepository.findAllByPostId(postId);
   }
 
-  public async createComment(dto: CreateCommentDto): Promise<BlogCommentEntity> {
-    const newComment = new BlogCommentEntity(dto);
+  public async createComment(dto: CreateCommentDto, postId: string): Promise<BlogCommentEntity> {
+    const newComment = new BlogCommentEntity({...dto, postId});
     await this.blogCommentRepository.save(newComment);
 
     return newComment;
@@ -26,5 +26,9 @@ export class BlogCommentService {
       throw new NotFoundException(`Comment with ID ${id} not found`);
     }
     await this.blogCommentRepository.deleteById(id);
+  }
+
+  public async getComment(id: string): Promise<BlogCommentEntity> {
+    return await this.blogCommentRepository.findById(id);
   }
 }

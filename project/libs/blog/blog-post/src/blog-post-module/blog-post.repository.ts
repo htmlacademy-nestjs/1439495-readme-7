@@ -177,5 +177,21 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async getSubscribersCount(userId: string): Promise<number> {
     return this.client.subscriber.count({ where: { authorId: userId } });
   }
+
+  public async addLike(userId: string, postId: string) {
+    await this.client.like.create({
+      data: { userId, postId }
+    });
+    return this.findById(postId);
+  }
+
+  public async deleteLike(userId: string, postId: string) {
+    await this.client.like.delete({
+      where: {
+        postId_userId: {postId, userId}
+      }
+    })
+    return this.findById(postId);
+  }
 }
 

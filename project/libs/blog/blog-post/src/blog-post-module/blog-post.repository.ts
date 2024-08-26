@@ -30,8 +30,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    if (query?.sortDirection) {
-      orderBy.createdAt = query.sortDirection;
+    if (query?.sortType) {
+      orderBy[query.sortType] = query.sortDirection;
+    }
+
+    if (query?.type) {
+      where.type = query.type;
     }
 
     const [records, postCount] = await Promise.all([
@@ -192,6 +196,22 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       }
     })
     return this.findById(postId);
+  }
+
+  public async searchPosts(title: string) {
+    const textPosts = await this.client.text.findMany({
+      where: {title},
+      include: {
+        post: true
+      }
+    })
+    const videoPosts = await this.client.video.findMany({
+      where: {title},
+      include: {
+        post: true
+      }
+    })
+    return [...textPosts, ...videoPosts];
   }
 }
 

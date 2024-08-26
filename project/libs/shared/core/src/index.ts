@@ -7,6 +7,7 @@ export { Post, VideoPost, TextPost, QuotePost, PhotoPost, LinkPost, PostType, Ta
 export { Token } from './lib/interfaces/token.interface';
 export { TokenPayload, RefreshTokenPayload, RequestWithTokenPayload } from './lib/interfaces/token-payload.interface';
 export { SortDirection } from './lib/interfaces/sort-direction.interface';
+export { SortType } from './lib/interfaces/sort-type.interface';
 export { PaginationResult } from './lib/interfaces/pagination.interface';
 export { File } from './lib/types/file.interface';
 export { StoredFile } from './lib/types/stored-file.interface';

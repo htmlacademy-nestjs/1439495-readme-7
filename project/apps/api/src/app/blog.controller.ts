@@ -1,6 +1,6 @@
 import 'multer';
 import { Express } from 'express';
-import { Body, Controller, Post, UseFilters, UseGuards, UseInterceptors, UploadedFile, Patch, Param, ForbiddenException, Delete, Get } from '@nestjs/common';
+import { Body, Controller, Post, UseFilters, UseGuards, UseInterceptors, UploadedFile, Patch, Param, ForbiddenException, Delete, Get, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { HttpService } from '@nestjs/axios';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
@@ -19,8 +19,8 @@ export class BlogController {
   ) {}
 
   @Get('/')
-  public async showPosts() {
-    const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/`);
+  public async showPosts(@Query() query) {
+    const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/`, { params: { ...query } });
     return data;
   }
 
@@ -117,6 +117,12 @@ export class BlogController {
   @Get('/:id/comments')
   public async getAllComments(@Param('id') id: string) {
     const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/${id}/comments`);
+    return data;
+  }
+
+  @Post('/search')
+  public async searchPosts(@Body() { title }: { title: string }) {
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Blog}/search`, {title});
     return data;
   }
 }

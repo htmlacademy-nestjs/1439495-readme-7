@@ -85,15 +85,33 @@ export class BlogPostController {
     return authorInfo;
   }
 
+  @ApiResponse({
+    type: PostRdo,
+    status: HttpStatus.CREATED
+  })
   @Post('/:id/like')
   public async addLike(@Body() {userId}, @Param('id') id: string) {
     const post = await this.blogPostService.addLike(userId, id);
     return fillDto(PostRdo, post.toPOJO());
   }
 
+  @ApiResponse({
+    type: PostRdo,
+    status: HttpStatus.OK
+  })
   @Patch('/:id/like')
   public async deleteLike(@Body() {userId}, @Param('id') id: string) {
     const post = await this.blogPostService.deleteLike(userId, id);
     return fillDto(PostRdo, post.toPOJO());
+  }
+
+  @ApiResponse({
+    type: PostRdo,
+    status: HttpStatus.OK
+  })
+  @Post('/search')
+  public async search(@Body() {title}) {
+    const posts = await this.blogPostService.searchPostsByTitle(title);
+    return posts;
   }
 }

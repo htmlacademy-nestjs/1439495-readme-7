@@ -58,4 +58,8 @@ export class BlogPostService {
   public async deleteLike(userId: string, postId: string) {
     return this.blogPostRepository.deleteLike(userId, postId);
   }
+
+  public async searchPostsByTitle(title: string) {
+    return this.blogPostRepository.searchPosts(title);
+  }
 }

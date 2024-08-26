@@ -29,8 +29,8 @@ export class BlogCommentController {
     description: 'Comment was created',
   })
   @Post('/')
-  public async create(@Body() dto: CreateCommentDto) {
-    const newComment = await this.blogCommentService.createComment(dto);
+  public async create(@Body() dto: CreateCommentDto, @Param('id') id: string) {
+    const newComment = await this.blogCommentService.createComment(dto, id);
     return fillDto(CommentRdo, newComment.toPOJO());
   }
 
@@ -42,5 +42,11 @@ export class BlogCommentController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(@Param('commentId') commentId: string) {
     await this.blogCommentService.deleteCommentById(commentId);
+  }
+
+  @Get('/:commentId')
+  public async getCommentInfo(@Param('commentId') commentId: string) {
+    const comment = await this.blogCommentService.getComment(commentId);
+    return fillDto(CommentRdo, comment);
   }
 }

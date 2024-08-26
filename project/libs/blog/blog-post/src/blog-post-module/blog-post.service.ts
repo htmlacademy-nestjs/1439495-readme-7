@@ -32,7 +32,7 @@ export class BlogPostService {
     if (!post) {
       throw new NotFoundException(`Post with ID ${id} not found`);
     }
-    const updatePost = new BlogPostEntity({...post, ...dto});
+    const updatePost = new BlogPostEntity({...post, ...dto, id});
     await this.blogPostRepository.update(updatePost);
     return updatePost;
   }
@@ -43,5 +43,23 @@ export class BlogPostService {
       throw new NotFoundException(`Post with ID ${id} not found`);
     }
     await this.blogPostRepository.deleteById(id);
+  }
+
+  public async getInfoForAuthor(id: string) {
+    const postsCount = await this.blogPostRepository.getPostsCountForAuthor(id);
+    const subscribersCount = await this.blogPostRepository.getSubscribersCount(id);
+    return { postsCount, subscribersCount };
+  }
+
+  public async addLike(userId: string, postId: string) {
+    return this.blogPostRepository.addLike(userId, postId);
+  }
+
+  public async deleteLike(userId: string, postId: string) {
+    return this.blogPostRepository.deleteLike(userId, postId);
+  }
+
+  public async searchPostsByTitle(title: string) {
+    return this.blogPostRepository.searchPosts(title);
   }
 }

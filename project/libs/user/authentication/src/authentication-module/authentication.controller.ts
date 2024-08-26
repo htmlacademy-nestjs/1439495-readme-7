@@ -1,13 +1,18 @@
-import { Controller, Body, Post, Get, Param, HttpStatus } from '@nestjs/common';
+import { Controller, Body, Post, Patch, Get, Param, HttpStatus, UseGuards, Req, HttpCode } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { LoginUserDto } from '../dto/login-user.dto';
 import { AuthenticationResponseMessage } from './authentication.constant';
 import { LoggedUserRdo } from '../rdo/logged-user.rdo';
 import { UserRdo } from '../rdo/user.rdo';
 import { fillDto } from '@project/shared-helpers';
 import { NotifyService } from '@project/user-notify';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
+import { RequestWithUser } from './request-with-user.interface';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
+import { RequestWithTokenPayload } from '@project/shared-core';
+import { PasswordDto } from '../dto/password.dto';
 
 @ApiTags('authentication')
 @Controller('user')
@@ -42,9 +47,9 @@ export class AuthenticationController {
     status: HttpStatus.UNAUTHORIZED,
     description: AuthenticationResponseMessage.LoggedError,
   })
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  public async login(@Body() dto: LoginUserDto) {
-    const user = await this.authService.verifyUser(dto);
+  public async login(@Req() { user }: RequestWithUser) {
     const userToken = await this.authService.createUserToken(user);
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken, });
   }
@@ -62,5 +67,36 @@ export class AuthenticationController {
   public async show(@Param('id') id: string) {
     const user = await this.authService.getUser(id);
     return fillDto(UserRdo, {...user.toPOJO(), id});
+  }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Get a new access/refresh tokens'
+  })
+  @UseGuards(JwtRefreshGuard)
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  public async refreshToken(@Req() { user }: RequestWithUser) {
+    return this.authService.createUserToken(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('check')
+  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+    return payload;
+  }
+
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: AuthenticationResponseMessage.PasswordChanged,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.LoggedError,
+  })
+  @Patch('password')
+  public async changePassword(@Body() dto: PasswordDto) {
+    const {userId, oldPassword, newPassword} = dto;
+    await this.authService.changeUserPassword(userId, oldPassword, newPassword);
   }
 }

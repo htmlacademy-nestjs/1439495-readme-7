@@ -30,8 +30,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    if (query?.sortDirection) {
-      orderBy.createdAt = query.sortDirection;
+    if (query?.sortType) {
+      orderBy[query.sortType] = query.sortDirection;
+    }
+
+    if (query?.type) {
+      where.type = query.type;
     }
 
     const [records, postCount] = await Promise.all([
@@ -168,6 +172,46 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         quote: true
       }
     });
+  }
+
+  public async getPostsCountForAuthor(userId: string): Promise<number> {
+    return this.getPostCount({userId});
+  }
+
+  public async getSubscribersCount(userId: string): Promise<number> {
+    return this.client.subscriber.count({ where: { authorId: userId } });
+  }
+
+  public async addLike(userId: string, postId: string) {
+    await this.client.like.create({
+      data: { userId, postId }
+    });
+    return this.findById(postId);
+  }
+
+  public async deleteLike(userId: string, postId: string) {
+    await this.client.like.delete({
+      where: {
+        postId_userId: {postId, userId}
+      }
+    })
+    return this.findById(postId);
+  }
+
+  public async searchPosts(title: string) {
+    const textPosts = await this.client.text.findMany({
+      where: {title},
+      include: {
+        post: true
+      }
+    })
+    const videoPosts = await this.client.video.findMany({
+      where: {title},
+      include: {
+        post: true
+      }
+    })
+    return [...textPosts, ...videoPosts];
   }
 }
 

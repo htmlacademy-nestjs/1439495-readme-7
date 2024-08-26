@@ -9,6 +9,7 @@ export const AuthenticationResponseMessage = {
   UserNotFound: 'User not found',
   UserExist: 'User with this email is already exists',
   UserCreated: 'The new user has been successfully created.',
+  PasswordChanged: 'The password was succesfully changed.'
 } as const;
 
 export const AuthenticationValidateMessage = {
